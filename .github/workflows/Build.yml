@@ -1,0 +1,96 @@
+name: APK
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+  # Allows you to run this workflow manually from the Actions tab of the repository
+  workflow_dispatch:
+
+env:
+  # https://flet.dev/docs/publish#versioning
+  APP_NAME: "AEMediaDL"
+  BUILD_NUMBER: 202508081
+  BUILD_VERSION: 0.0.1
+  PYTHON_VERSION: 3.13.5
+  FLUTTER_VERSION: 3.29.2
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+
+    - name: Setup Java JDK
+      uses: actions/setup-java@v4.2.1
+      with:
+        distribution: 'temurin' # See https://github.com/marketplace/actions/setup-java-jdk#supported-distributions for available options
+        java-version: '21'
+
+    - name: Flet Build APK ${{ env.APP_NAME }}
+      run: |
+        flutter config --no-analytics
+        flet build apk --verbose
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: apk
+        path: build/apk
+        if-no-files-found: error 
+        overwrite: true
+
+  create-release:
+    needs: [build-apk]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }} #GitHub Token
+        with:
+          tag_name: v${{ env.BUILD_VERSION }}
+          release_name: Release v${{ env.BUILD_VERSION }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ls -la artifacts/
+            artifacts/apk/app-release.apk
+          tag_name: v${{ env.BUILD_VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }} #GitHub Token
