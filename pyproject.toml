@@ -32,7 +32,7 @@ flutter.dependencies = ["flet_permission_handler"]
 "android.permission.PHONE" = true
 
 [tool.flet.android]
-#split_per_abi = true
+split_per_abi = true
 
 [tool.flet.android.signing]
 # store and key passwords can be passed with `--android-signing-key-store-password`
