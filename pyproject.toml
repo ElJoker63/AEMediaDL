@@ -1,6 +1,6 @@
 [project]
 
-name = "AEMedia"
+name = "AEMediaDL"
 version = "0.0.1"
 description = "App para la descarga de videos"
 authors = [
@@ -13,7 +13,7 @@ exclude = [".venv", "build", "requirements.txt", "media.py", "pribot.py", "permi
 
 [tool.flet]
 org = "com.aewaredev"
-product = "AEMedia"
+product = "AEMediaDL"
 company = "AEwareDev"
 copyright = "Copyright (C) 2025 by AEwareDev"
 build_number = 202508081
@@ -32,7 +32,7 @@ flutter.dependencies = ["flet_permission_handler"]
 "android.permission.PHONE" = true
 
 [tool.flet.android]
-split_per_abi = true
+#split_per_abi = true
 
 [tool.flet.android.signing]
 # store and key passwords can be passed with `--android-signing-key-store-password`
