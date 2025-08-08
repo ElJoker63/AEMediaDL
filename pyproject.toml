@@ -1,0 +1,43 @@
+[project]
+
+name = "AEMedia"
+version = "0.0.1"
+description = "App para la descarga de videos"
+authors = [
+  {name = "ELJoker63", email = "eljoker630@gmail.com"}
+]
+dependencies = ["flet", "asyncio", "humanize", "yt-dlp", "asyncio"]
+
+[tool.flet.app]
+exclude = [".venv", "build", "requirements.txt", "media.py", "pribot.py", "permisos.py", "AEDL.zip", "build.cmd", "pyproject.toml"]
+
+[tool.flet]
+org = "com.aewaredev"
+product = "AEMedia"
+company = "AEwareDev"
+copyright = "Copyright (C) 2025 by AEwareDev"
+build_number = 202508081
+permissions = ["storage", "internet", "phone"]
+flutter.dependencies = ["flet_permission_handler"]
+
+[tool.flet.android.permission] # --android-permissions
+"android.permission.READ_EXTERNAL_STORAGE" = true
+"android.permission.BACKGROUND_REFRESH" = true
+"android.permission.IGNORE_BATTERY_OPTIMIZATIONS" = true
+"android.permission.MANAGE_EXTERNAL_STORAGE" = true
+"android.permission.MEDIA_LIBRARY" = true
+"android.permission.STORAGE" = true
+"android.permission.INTERNET" = true
+"android.permission.ACCESS_MEDIA_LOCATION" = true
+"android.permission.PHONE" = true
+
+[tool.flet.android]
+split_per_abi = true
+
+[tool.flet.android.signing]
+# store and key passwords can be passed with `--android-signing-key-store-password`
+# and `--android-signing-key-password` options or
+# FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD
+# and FLET_ANDROID_SIGNING_KEY_PASSWORD environment variables.
+#key_store = "build/bytebloom.jks" # --android-signing-key-store
+#key_alias = "bytebloom"
