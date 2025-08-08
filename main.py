@@ -7,11 +7,11 @@ from time import localtime
 
 seg = 0
 
-ruta = "/storage/emulated/0/AEMedia"
+ruta = "/storage/emulated/0/AEMediaDL"
 
 
 def main(page: ft.Page):
-    page.title = "AEMedia"
+    page.title = "AEMediaDL"
     page.theme_mode = ft.ThemeMode.DARK
     page.padding = 0
     page.auto_scroll = True
@@ -27,7 +27,7 @@ def main(page: ft.Page):
 
     app_bar = ft.AppBar(
         leading=ft.Icon(ft.Icons.SLOW_MOTION_VIDEO_ROUNDED),
-        title=ft.Text("AEMedia"),
+        title=ft.Text("AEMediaDL"),
         center_title=True,
         bgcolor=ft.Colors.INDIGO,
     )
@@ -127,7 +127,7 @@ def main(page: ft.Page):
         dlp_opts = {
             "logger": YT_DLP_LOGGER(),
             "progress_hooks": [callback],
-            "outtmpl": "/storage/emulated/0/AEMedia/%(title)s.%(ext)s",
+            "outtmpl": "/storage/emulated/0/AEMediaDL/%(title)s.%(ext)s",
             "format": "best[height<=720]/best[height<=480]/best",  # Si no encuentra 480p, usará la mejor calidad disponible
             "extract_flat": False,
             "no_warnings": True,
