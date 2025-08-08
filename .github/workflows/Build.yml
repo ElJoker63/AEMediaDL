@@ -1,14 +1,14 @@
 name: APK
 
 on:
-  push:
-    branches:
-      - master
-      - main
-  pull_request:
-    branches:
-      - master
-      - main
+  #push:
+  #  branches:
+  #    - master
+   #   - main
+  #pull_request:
+  #  branches:
+  #    - master
+  #    - main
   # Allows you to run this workflow manually from the Actions tab of the repository
   workflow_dispatch:
 
