@@ -2,13 +2,11 @@ import flet as ft
 import yt_dlp
 import os
 import humanize
-import asyncio
 from time import localtime
 
 seg = 0
 
 ruta = "/storage/emulated/0/AEMediaDL"
-
 
 def main(page: ft.Page):
     page.title = "AEMediaDL"
@@ -113,14 +111,12 @@ def main(page: ft.Page):
                 page.update()
             seg = localtime().tm_sec
 
-    async def ytdlp_downloader(url, callback):
+    def ytdlp_downloader(url, callback):
         class YT_DLP_LOGGER(object):
             def debug(self, msg):
                 pass
-
             def warning(self, msg):
                 pass
-
             def error(self, msg):
                 pass
 
@@ -136,19 +132,21 @@ def main(page: ft.Page):
 
         try:
             downloader = yt_dlp.YoutubeDL(dlp_opts)
-            filedata = await asyncio.get_running_loop().run_in_executor(
-                None, downloader.extract_info, url
-            )
+            filedata = downloader.extract_info(url)
             return downloader.prepare_filename(filedata)
         except Exception as e:
             page.open(alert("error", f"Error al descargar: {str(e)}"))
             page.update()
 
-    async def download_video(url):
+    def download_video(url):
         try:
-            await ytdlp_downloader(url, download_progress)
+            infodl.visible = True
+            infodl.value = 0
+            page.update()
+            ytdlp_downloader(url, download_progress)
             update_list()
             infodl.visible = False
+            infodl.value = 0
             page.update()
             page.open(alert("ok", "DESCARGA COMPLETADA"))
             page.update()
@@ -156,30 +154,31 @@ def main(page: ft.Page):
             print(str(e))
             page.open(alert("error", str(e)))
             page.update()
-        infodl.controls.clear()
+        infodl.visible = False
+        infodl.value = 0
         infodl.update()
 
-    async def get_name(url):
+    def get_name(url):
         if 'xnxx' in url:
             page.open(alert("info", "DESCARGANDO DE XNXX"))
             page.update()
-        if 'youtube' in url:
+        elif 'youtube' in url:
             page.open(alert("error", "DESCARGANDO DE YOUTUBE"))
             page.update()
-        if 'ok.ru' in url:
+        elif 'ok.ru' in url:
             page.open(alert("ok.ru", "DESCARGANDO DE OK.RU"))
             page.update()
-        if 'pinterest' in url:
+        elif 'pinterest' in url:
             page.open(alert("error", "DESCARGANDO DE PINTEREST"))
             page.update()
-        if 'insta' in url:
+        elif 'insta' in url:
             page.open(alert("insta", "DESCARGANDO DE INSTAGRAM"))
             page.update()
         else:
             page.open(alert("info", "DESCARGANDO"))
             page.update()
         try:
-            await download_video(url)
+            download_video(url)
         except Exception as e:
             print(str(e))
             page.open(alert("error", str(e)))
@@ -201,7 +200,7 @@ def main(page: ft.Page):
     info = ft.Row(
         controls=[ft.Text("App para descargas de Instagram, Pinterest, Xnxx, Youtube y Ok.ru", size=14)], alignment=ft.MainAxisAlignment.CENTER, wrap=True, spacing=30
     )
-    url = ft.TextField(label="URL", border_color="indigo", border_radius=35, on_submit=lambda _: asyncio.run(get_name(url.value)))
+    url = ft.TextField(label="URL", border_color="indigo", border_radius=35, on_submit=lambda _: get_name(url.value))
     button = ft.Row(
         [
             ft.TextButton(
@@ -216,7 +215,7 @@ def main(page: ft.Page):
                         ft.Text("DESCARGAR", font_family="Qs-B", size=20, color=ft.Colors.INDIGO),
                     ]
                 ),
-                on_click=lambda _: asyncio.run(get_name(url.value)),
+                on_click=lambda _: get_name(url.value),
             )
         ],
         alignment=ft.MainAxisAlignment.CENTER,
