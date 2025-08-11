@@ -1,4 +1,3 @@
 flet
 humanize
 yt-dlp
-asyncio
