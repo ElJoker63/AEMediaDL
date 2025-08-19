@@ -3,13 +3,15 @@ import yt_dlp
 import os
 import humanize
 from time import localtime
+import flet_dropzone as ftd
 
+APP_NAME = "AEMediaDL"
 seg = 0
 
-ruta = "/storage/emulated/0/AEMediaDL"
+ruta = f"/storage/emulated/0/{APP_NAME}"
 
 def main(page: ft.Page):
-    page.title = "AEMediaDL"
+    page.title = APP_NAME
     page.theme_mode = ft.ThemeMode.DARK
     page.padding = 0
     page.auto_scroll = True
@@ -25,7 +27,7 @@ def main(page: ft.Page):
 
     app_bar = ft.AppBar(
         leading=ft.Icon(ft.Icons.SLOW_MOTION_VIDEO_ROUNDED),
-        title=ft.Text("AEMediaDL"),
+        title=ft.Text(APP_NAME),
         center_title=True,
         bgcolor=ft.Colors.INDIGO,
     )
@@ -123,7 +125,7 @@ def main(page: ft.Page):
         dlp_opts = {
             "logger": YT_DLP_LOGGER(),
             "progress_hooks": [callback],
-            "outtmpl": "/storage/emulated/0/AEMediaDL/%(title)s.%(ext)s",
+            "outtmpl": f"/storage/emulated/0/{APP_NAME}/%(title)s.%(ext)s",
             "format": "best[height<=1080]/best[height<=720]/best[height<=480]/best",  # Si no encuentra 480p, usará la mejor calidad disponible
             "extract_flat": False,
             "no_warnings": True,
@@ -203,6 +205,7 @@ def main(page: ft.Page):
     info = ft.Row(
         controls=[ft.Text("App para descargas de Instagram, Pinterest, Xnxx, Youtube y Ok.ru", size=14)], alignment=ft.MainAxisAlignment.CENTER, wrap=True, spacing=30
     )
+    
     url = ft.TextField(label="URL", border_color="indigo", border_radius=35, on_submit=lambda _: get_name(url.value))
     button = ft.Row(
         [
@@ -219,6 +222,15 @@ def main(page: ft.Page):
                     ]
                 ),
                 on_click=lambda _: get_name(url.value),
+            ),
+            ft.TextButton(
+                content=ft.Row(
+                    [
+                        ft.Icon(ft.Icons.UPDATE_OUTLINED),
+                        ft.Text("ACTUALIZAR", font_family="Qs-B", size=20, color=ft.Colors.INDIGO),
+                    ]
+                ),
+                on_click=lambda _: update_list(),
             )
         ],
         alignment=ft.MainAxisAlignment.CENTER,
@@ -235,5 +247,4 @@ def main(page: ft.Page):
         button,
         downloads,
     )
-
 ft.app(target=main, assets_dir='assets')
