@@ -124,7 +124,7 @@ def main(page: ft.Page):
             "logger": YT_DLP_LOGGER(),
             "progress_hooks": [callback],
             "outtmpl": "/storage/emulated/0/AEMediaDL/%(title)s.%(ext)s",
-            "format": "best[height<=720]/best[height<=480]/best",  # Si no encuentra 480p, usará la mejor calidad disponible
+            "format": "best[height<=1080]/best[height<=720]/best[height<=480]/best",  # Si no encuentra 480p, usará la mejor calidad disponible
             "extract_flat": False,
             "no_warnings": True,
             "quiet": True,
@@ -161,6 +161,9 @@ def main(page: ft.Page):
     def get_name(url):
         if 'xnxx' in url:
             page.open(alert("info", "DESCARGANDO DE XNXX"))
+            page.update()
+        elif 'facebook.com' in url:
+            page.open(alert("info", "DESCARGANDO DE FACEBOOK"))
             page.update()
         elif 'youtube' in url:
             page.open(alert("error", "DESCARGANDO DE YOUTUBE"))
